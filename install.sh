@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]; then
     exit
 fi
 
-content=$(curl -sL https://raw.githubusercontent.com/vclemenzi/nove/main/nove.sh)
+content=$(cat nove.sh | sed 's/\/bin\/usr\/bash/\/usr\/bin\/bash/g' | sed 's/\/bin\/usr\/sh/\/usr\/bin\/sh/g')
 
 touch /usr/bin/nove
 echo "$content" > /usr/bin/nove
