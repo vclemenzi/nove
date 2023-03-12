@@ -12,19 +12,27 @@ case $1 in
     "install")
         is_root
 
-        echo -e "\e[1;2m[0/5]\e[0m \e[1;33mInstalling Node.js $2...\e[0m"
+        if [ $2 = "latest" ]
+        then
+            # Get latest version
+            version=$(curl -s https://nodejs.org/dist/latest/ | grep -oP 'node-v\d+\.\d+\.\d+-linux-x64.tar.xz' | grep -oP '\d+\.\d+\.\d+' | tail -n 1)
+        else
+            version=$2
+        fi
+
+        echo -e "\e[1;2m[0/5]\e[0m \e[1;33mInstalling Node.js $version...\e[0m"
 
         # Download Node
-        curl -sL https://nodejs.org/dist/v$2/node-v$2-linux-x64.tar.xz -o /etc/node-v$2-linux-x64.tar.xz
+        curl -sL https://nodejs.org/dist/v$version/node-v$version-linux-x64.tar.xz -o /etc/node-v$version-linux-x64.tar.xz
         echo -e "\e[1;2m[1/5]\e[0m \e[1;33mDownloading Node...\e[0m"
 
         # Extract Node
-        tar -xf /etc/node-v$2-linux-x64.tar.xz -C /etc/
+        tar -xf /etc/node-v$version-linux-x64.tar.xz -C /etc/
         echo -e "\e[1;2m[2/5]\e[0m \e[1;33mExtracting Node...\e[0m"
 
         # Replace Node binary
         rm -rf /usr/bin/node
-        ln -s /etc/node-v$2-linux-x64/bin/node /usr/bin/node
+        ln -s /etc/node-v$version-linux-x64/bin/node /usr/bin/node
         echo -e "\e[1;2m[3/5]\e[0m \e[1;33mReplacing Node binary...\e[0m"
 
         if [ "$3" = "--skip-npm" ];
@@ -32,31 +40,39 @@ case $1 in
             echo -e "\e[1;2m[4/5]\e[0m \e[1;33mSkipping NPM installation...\e[0m"
         else
             rm -rf /usr/bin/npm
-            ln -s /etc/node-v$2-linux-x64/bin/npm /usr/bin/npm
+            ln -s /etc/node-v$version-linux-x64/bin/npm /usr/bin/npm
 
             rm -rf /usr/bin/npx
-            ln -s /etc/node-v$2-linux-x64/bin/npx /usr/bin/npx
+            ln -s /etc/node-v$version-linux-x64/bin/npx /usr/bin/npx
 
             echo -e "\e[1;2m[4/5]\e[0m \e[1;33mReplacing NPM binary...\e[0m"
         fi
 
         # Remove Node archive
-        rm -rf /etc/node-v$2-linux-x64.tar.xz
+        rm -rf /etc/node-v$version-linux-x64.tar.xz
         echo -e "\e[1;2m[5/5]\e[0m \e[1;33mRemoving Node archive...\e[0m"
 
         # Done
-        echo -e "\e[1;2m[---]\e[0m \e[1;32mNode $2 installed successfully!\e[0m | \e[1;33mRun 'node -v' to check the version.\e[0m"
+        echo -e "\e[1;2m[---]\e[0m \e[1;32mNode $version installed successfully!\e[0m | \e[1;33mRun 'node -v' to check the version.\e[0m"
         ;;
 
     "use" | "run")
         is_root
 
+        if [ $2 = "latest" ]
+        then
+            # Get latest version
+            version=$(curl -s https://nodejs.org/dist/latest/ | grep -oP 'node-v\d+\.\d+\.\d+-linux-x64.tar.xz' | grep -oP '\d+\.\d+\.\d+' | tail -n 1)
+        else
+            version=$2
+        fi
+
         # Download Node
-        curl -sL https://nodejs.org/dist/v$2/node-v$2-linux-x64.tar.xz -o /etc/node-v$2-linux-x64.tar.xz
-        tar -xf /etc/node-v$2-linux-x64.tar.xz -C /etc/
+        curl -sL https://nodejs.org/dist/v$version/node-v$version-linux-x64.tar.xz -o /etc/node-v$version-linux-x64.tar.xz
+        tar -xf /etc/node-v$version-linux-x64.tar.xz -C /etc/
 
         # Run Node binary
-        /etc/node-v$2-linux-x64/bin/node $3
+        /etc/node-v$version-linux-x64/bin/node $3
         ;;
     *)
         echo "Usage: nove [install | use] [version] [...args]"
