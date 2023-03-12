@@ -47,6 +47,17 @@ case $1 in
         # Done
         echo -e "\e[1;2m[---]\e[0m \e[1;32mNode $2 installed successfully!\e[0m | \e[1;33mRun 'node -v' to check the version.\e[0m"
         ;;
+
+    "use" | "run")
+        is_root
+
+        # Download Node
+        curl -sL https://nodejs.org/dist/v$2/node-v$2-linux-x64.tar.xz -o /etc/node-v$2-linux-x64.tar.xz
+        tar -xf /etc/node-v$2-linux-x64.tar.xz -C /etc/
+
+        # Run Node binary
+        /etc/node-v$2-linux-x64/bin/node $3
+        ;;
     *)
         echo "Usage: nvm.sh [install|uninstall]"
         ;;
