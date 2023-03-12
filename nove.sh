@@ -59,6 +59,6 @@ case $1 in
         /etc/node-v$2-linux-x64/bin/node $3
         ;;
     *)
-        echo "Usage: nvm.sh [install|uninstall]"
+        echo "Usage: nove [install | use] [version] [...args]"
         ;;
 esac
