@@ -1,7 +1,17 @@
 #!/bin/usr/bash
 
+is_root() {
+    if [ "$EUID" -ne 0 ]
+    then
+        echo -e "\e[1;31mPlease run this script as root.\e[0m"
+        exit
+    fi
+}
+
 case $1 in
     "install")
+        is_root
+
         echo -e "\e[1;2m[0/5]\e[0m \e[1;33mInstalling Node.js $2...\e[0m"
 
         # Download Node
