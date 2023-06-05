@@ -7,11 +7,7 @@ Nove is a shell-based Node.js version manager, similar to nvm and n. With nove, 
 To install nove, run the following command in a terminal window:
 
 ```bash
-git clone https://github.com/vclemenzi/nove && cd nove
-```
-
-```bash
-sudo sh install.sh
+curl https://raw.githubusercontent.com/vclemenzi/nove/main/install.sh | bash
 ```
 
 This will download the installation file from the Github repository, and execute it with bash. If prompted for a password, enter your system password.
