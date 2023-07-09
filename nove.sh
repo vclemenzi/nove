@@ -54,11 +54,11 @@ case $1 in
 
         # Done
         echo -e "\e[1;2m[---]\e[0m \e[1;32mNode $version installed successfully!\e[0m | \e[1;33mRun 'node -v' to check the version.\e[0m"
+
+        exit 0
         ;;
 
     "use" | "run")
-        is_root
-
         if [ $2 = "latest" ]
         then
             # Get latest version
@@ -67,12 +67,21 @@ case $1 in
             version=$2
         fi
 
+        if [ -d "/home/$USER/.novebin/node-v$version-linux-x64/" ]; then
+            /home/$USER/.novebin/node-v$version-linux-x64/bin/node $3
+            exit 0
+        fi
+
+        mkdir /home/$USER/.novebin
+        mkdir /home/$USER/.novebin/tarball
+
         # Download Node
-        curl -sL https://nodejs.org/dist/v$version/node-v$version-linux-x64.tar.xz -o /etc/node-v$version-linux-x64.tar.xz
-        tar -xf /etc/node-v$version-linux-x64.tar.xz -C /etc/
+        curl -sL https://nodejs.org/dist/v$version/node-v$version-linux-x64.tar.xz -o /home/$USER/.novebin/tarball/node-v$version-linux-x64.tar.xz
+        tar -xf /etc/node-v$version-linux-x64.tar.xz -C /home/$USER/.novebin
 
         # Run Node binary
-        /etc/node-v$version-linux-x64/bin/node $3
+        /home/$USER/.novebin/node-v$version-linux-x64/bin/node $3
+        exit 0
         ;;
     *)
         echo "Usage: nove [install | use] [version] [...args]"
